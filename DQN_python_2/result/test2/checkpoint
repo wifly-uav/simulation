@@ -1,0 +1,6 @@
+model_checkpoint_path: "d:/github/simulation/DQN_python_\\result\\test2/WiflyDual_DQN"
+all_model_checkpoint_paths: "d:\\github\\simulation\\DQN_python_\\models\\WiflyDual_DQN015642"
+all_model_checkpoint_paths: "d:\\github\\simulation\\DQN_python_\\models\\WiflyDual_DQN015644"
+all_model_checkpoint_paths: "d:\\github\\simulation\\DQN_python_\\models\\WiflyDual_DQN015646"
+all_model_checkpoint_paths: "d:\\github\\simulation\\DQN_python_\\models\\WiflyDual_DQN015647"
+all_model_checkpoint_paths: "d:/github/simulation/DQN_python_\\result\\test2/WiflyDual_DQN"

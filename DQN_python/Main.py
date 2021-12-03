@@ -4,6 +4,7 @@ from Environment import Environment
 from Agent import DQNAgent
 from Logger import logger
 import sys
+import copy
 
 N_EPOCHS = 200
 N_FRAMES = 100
@@ -58,7 +59,7 @@ if __name__ == "__main__":
                 if terminal == True:
                     break
 
-            agent.create_checkpoint()
+            #agent.create_checkpoint()
             checkpoint_report = "EPOCH: {:03d}/{:03d} | REWARD: {:03f} | LOSS: {:.4f}".format(i, N_EPOCHS - 1, reward_sum, loss)
             print(checkpoint_report)
             log.add_log([checkpoint_report])

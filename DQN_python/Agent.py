@@ -8,6 +8,7 @@ tf.disable_v2_behavior()
 tf.get_logger().setLevel("ERROR")
 import numpy as np
 import csv
+import copy
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -15,7 +16,7 @@ warnings.filterwarnings('ignore')
 MODEL_NAME = "WiflyDual_DQN" + str(datetime.today())[0:10]
 MODEL_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
 CHECKPOINT_NAME = "WiflyDual_DQN"
-MINIBATCH_SIZE = 32
+MINIBATCH_SIZE = 8
 REPLAY_MEMORY_SIZE = 1000
 LEARNING_RATE = 0.002
 DISCOUNT_FACTOR = 0.95
@@ -148,7 +149,7 @@ class DQNAgent:
             [int]: 決定した行動の番号
         """
         a = self.Q_values(state)
-        self.log_q.append(list(state))
+        self.log_q.append(state.copy())
         self.log_q.append(a)
         if np.random.rand() <= self.epsilon:
             # random
@@ -171,7 +172,7 @@ class DQNAgent:
             state_1 ([deque]): 1フレーム前の状態
             terminal ([int]): ターミナル
         """
-        self.replay_memory.append((state, action, reward, state_1, terminal))
+        self.replay_memory.append((state.copy(), action, reward, state_1.copy(), terminal))
 
     # train the network by replaying experience
     def experience_replay(self):
