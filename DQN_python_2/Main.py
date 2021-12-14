@@ -6,9 +6,10 @@ from Logger import logger
 import sys
 from visualize_nn import visual_nn
 from visualize_heatmap import visual_minibach
+from visualize_act import visual_act
 import os
 
-N_EPOCHS = 10
+N_EPOCHS = 500
 N_FRAMES = 500
 MODEL_NAME_HEADER = "WiflyDual_DQN"
 
@@ -63,6 +64,7 @@ if __name__ == "__main__":
     env = Environment()
     vi = visual_nn(folder=save_file)
     mi = visual_minibach(folder=save_file)
+    ac = visual_act(folder=save_file)
     
     print("press y to start")
 
@@ -82,7 +84,7 @@ if __name__ == "__main__":
                 state_current = state_next
                 action = agent.select_action(state_current)
                 if training_flag:
-                    agent.epsilon -= 0.1/3000
+                    agent.epsilon -= 0.1/30000
                 else:
                     agent.epsilon = 0
                 env.excute_action(action)
@@ -125,5 +127,6 @@ if __name__ == "__main__":
 
     vi.visualize()
     mi.visualize()
+    ac.visualize()
 
     print("finish")

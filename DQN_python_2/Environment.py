@@ -4,6 +4,7 @@ import numpy as np
 import random as rd
 import time
 from collections import deque
+import math
 
 RIGHT_WING = 1
 LEFT_WING = 3
@@ -94,7 +95,14 @@ class Environment():
         ##報酬の設定
         ##報酬の設定
         err = abs(float(data[0][1]))
-        reward = 1-1*err/90
+        #angle = math.degrees(err)
+        angle = err
+        if angle < 10:
+            return 1
+        elif angle < 45:
+            return 0
+        else:
+            return -1
 
         return reward
 
@@ -120,7 +128,7 @@ class Environment():
             self.params_to_send[RIGHT_WING]=PWM_WING+10
             self.params_to_send[LEFT_WING]=PWM_WING
         elif action == 3:
-            self.params_to_send[RIGHT_WING]=PWM_WING
+            self.params_to_send[RIGHT_WING]=PWM_WING+5
             self.params_to_send[LEFT_WING]=PWM_WING
         elif action == 4:
             self.params_to_send[RIGHT_WING]=PWM_WING-10

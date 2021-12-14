@@ -18,7 +18,7 @@ import os
 MODEL_NAME = "WiflyDual_DQN"# + str(datetime.today())[0:10]
 MODEL_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
 CHECKPOINT_NAME = "WiflyDual_DQN"
-MINIBATCH_SIZE = 8
+MINIBATCH_SIZE = 32
 REPLAY_MEMORY_SIZE = 10000
 LEARNING_RATE = 0.02
 DISCOUNT_FACTOR = 0.95
@@ -88,7 +88,7 @@ class DQNAgent:
             return tf.nn.batch_normalization(inputs,
                 pop_mean, pop_var, beta, scale, variance_epsilon)
 
-    def huber_loss(y_true, y_pred, clip_delta=1.0):
+    def huber_loss(self, y_true, y_pred, clip_delta=1.0):
         error = y_true - y_pred
         cond  = tf.keras.backend.abs(error) < clip_delta
 
@@ -96,6 +96,9 @@ class DQNAgent:
         linear_loss  = clip_delta * (tf.keras.backend.abs(error) - 0.5 * clip_delta)
 
         return tf.where(cond, squared_loss, linear_loss)
+
+    def huber_loss_mean(self, y_true, y_pred, clip_delta=1.0):
+        return tf.keras.backend.mean(self.huber_loss(y_true, y_pred, clip_delta))
 
     def init_model(self):
         """
@@ -129,7 +132,8 @@ class DQNAgent:
         # loss function
         with tf.name_scope('loss'):
             self.y_ = tf.placeholder(tf.float32, [None, N_ACTIONS])
-            self.loss = tf.reduce_mean(tf.square(self.y_ - self.y), name="loss")
+            #self.loss = tf.reduce_mean(tf.square(self.y_ - self.y), name="loss")
+            self.loss = tf.reduce_mean(self.huber_loss_mean(self.y_, self.y), name="loss")
 
         # train operation RMSPropOptimizer
         with tf.name_scope('Optimizer'):
@@ -164,7 +168,7 @@ class DQNAgent:
             [int]: 決定した行動の番号
         """
         a = self.Q_values(state)
-        self.log_q.append(state.copy())
+        #self.log_q.append(state.copy())
         self.log_q.append(a)
         if np.random.rand() <= self.epsilon:
             # random
@@ -185,7 +189,7 @@ class DQNAgent:
             [int]: 決定した行動の番号
         """
         a = self.Q_values(state)
-        self.log_q.append(list(state))
+        #self.log_q.append(list(state))
         self.log_q.append(a)
         angle = float(state[0][0])
         if angle<-45:
@@ -202,7 +206,6 @@ class DQNAgent:
         self.log_act.append([0, act])
         return act
 
-    # store experience to replay memory
     def store_experience(self, state, action, reward, state_1, terminal):
         """
         経験を保存する
@@ -213,7 +216,7 @@ class DQNAgent:
             state_1 ([deque]): 1フレーム前の状態
             terminal ([int]): ターミナル
         """
-        self.replay_memory.append((state.copy(), action, reward, state_1.copy(), terminal))
+        self.replay_memory.append((state, action, reward, state_1, terminal))
 
     # train the network by replaying experience
     def experience_replay(self, a=4, b=1):
