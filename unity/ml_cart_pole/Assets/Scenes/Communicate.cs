@@ -58,8 +58,8 @@ public class Com{
     }
     public string recv(){
         //タイムアウト設定
-        ns.ReadTimeout = 10000;
-        ns.WriteTimeout = 10000;
+        ns.ReadTimeout = 1000;
+        ns.WriteTimeout = 1000;
         //サーバーから送られたデータを受信する
         System.IO.MemoryStream ms = new System.IO.MemoryStream();
         byte[] resBytes = new byte[256];

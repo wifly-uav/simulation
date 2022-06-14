@@ -15,7 +15,7 @@ public class master : MonoBehaviour
     
 
     public string data;
-    public float pow,pow_up;
+    public float pow = 0;
     public float ang,len;
     public float x,yaw;
     public int reset;
@@ -69,7 +69,7 @@ public class master : MonoBehaviour
                 reset = 1;
             }
 
-            data = len.ToString("F2") + "," + err.ToString("F2") + "," + Time.deltaTime.ToString("F3") + "," + reset.ToString();// +","+num[i].hedder.ToString();
+            data = len.ToString("F2") + "," + err.ToString("F2") + "," + pow.ToString("F3") + "," + Time.deltaTime.ToString("F3") + "," + reset.ToString();// +","+num[i].hedder.ToString();
             communicate.send(data);
             //Debug.Log(data);
 
